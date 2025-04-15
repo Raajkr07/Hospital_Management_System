@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🏥 Hospital Management System</title>
+  <style>
+      body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f8ff;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+    background-color: #4682b4;
+    color: white;
+}
+
+header h1 {
+    margin: 0;
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    border-bottom: 2px solid #4682b4;
+}
+
+.tabs button {
+    background-color: #f0f8ff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.tabs button:hover,
+.tabs button.active {
+    background-color: #4682b4;
+    color: white;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.form-container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.form-container h2 {
+    text-align: center;
+    color: #4682b4;
+}
+
+.form-container input,
+.form-container select,
+.form-container button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.form-container button {
+    background-color: #32cd32;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.form-container button:hover {
+    background-color: #228b22;
+}
+
+.table-container {
+    margin-top: 20px;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #4682b4;
+    color: white;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.button-container button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+}
+
+.add-button {
+    background-color: #32cd32;
+    color: white;
+}
+
+.delete-button {
+    background-color: #ff6347;
+    color: white;
+}
+
+.clear-button {
+    background-color: #4682b4;
+    color: white;
+}
+
+.welcome-message {
+    text-align: center;
+    font-size: 24px;
+    color: #4682b4;
+    margin-top: 50px;
+}
+
+  </style>
+</head>
+<body>
+
+<header>
+    <h1>🧑‍⚕️ People's Hospital </h1>
+</header>
+
+<div class="container">
+    <div class="tabs">
+        <button onclick="openTab(event, 'home')">🏠 Home</button>
+        <button onclick="openTab(event, 'patient')">👨‍⚕ Patient</button>
+        <button onclick="openTab(event, 'doctor')">👩‍⚕ Doctor</button>
+        <button onclick="openTab(event, 'viewData')">📊 View Data</button>
+    </div>
+
+    <!-- Home Tab -->
+    <div id="home" class="tab-content">
+        <div class="welcome-message">
+            <p>Welcome to the Hospital Management System</p>
+        </div>
+    </div>
+
+    <!-- Patient Tab -->
+    <div id="patient" class="tab-content">
+        <div class="form-container">
+            <h2>Add Patient Details</h2>
+            <input type="text" id="patientName" placeholder="👤 Name">
+            <input type="number" id="patientAge" placeholder="🎂 Age">
+            <select id="patientGender">
+                <option value="Male">⚥ Male</option>
+                <option value="Female">⚥ Female</option>
+                <option value="Other">⚥ Other</option>
+            </select>
+            <select id="patientDisease">
+                <option value="Fever">🩺 Fever</option>
+                <option value="Flu"> Flu</option>
+                <option value="Diabetes">🩺 Diabetes</option>
+                <option value="Hypertension">🩺 Hypertension</option>
+                <option value="Covid-19">🩺 Covid-19</option>
+                <option value="Asthma">🩺 Asthma</option>
+                <option value="Heart Disease">🩺 Heart Disease</option>
+                <option value="Other">🩺 Other</option>
+            </select>
+            <div class="button-container">
+                <button class="add-button" onclick="addPatient()">Add Patient</button>
+                <button class="clear-button" onclick="clearPatientFields()">Clear</button>
+                <button class="clear-button" onclick="clearDoctorFields()">Delete Patient</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Doctor Tab -->
+    <div id="doctor" class="tab-content">
+        <div class="form-container">
+            <h2>Add Doctor Details</h2>
+            <input type="text" id="doctorName" placeholder="👨‍⚕ Name">
+            <input type="number" id="doctorAge" placeholder="🎂 Age">
+            <select id="doctorGender">
+                <option value="Male">⚥ Male</option>
+                <option value="Female">⚥ Female</option>
+                <option value="Other">⚥ Other</option>
+            </select>
+            <input type="text" id="doctorSpecialty" placeholder="📚 Specialty">
+            <div class="button-container">
+                <button class="add-button" onclick="addDoctor()">Add Doctor</button>
+                <button class="clear-button" onclick="clearDoctorFields()">Clear</button>
+                <button class="clear-button" onclick="clearDoctorFields()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Data Tab -->
+    <div id="viewData" class="tab-content">
+        <div class="button-container">
+            <button onclick="loadViewData()">🔄 Refresh Data</button>
+        </div>
+
+        <div class="table-container">
+            <h2>Patient Data</h2>
+            <table id="patientTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>Disease</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <h2>Doctor Data</h2>
+            <table id="doctorTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>Specialty</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+function openTab(evt, tabName) {
+    const contents = document.querySelectorAll('.tab-content');
+    contents.forEach(content => content.classList.remove('active'));
+
+    const buttons = document.querySelectorAll('.tabs button');
+    buttons.forEach(button => button.classList.remove('active'));
+
+    document.getElementById(tabName).classList.add('active');
+    evt.currentTarget.classList.add('active');
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector(".tabs button").click(); // Open first tab
+});
+
+// ---------------- Add Patient ----------------
+function addPatient() {
+    const name = document.getElementById('patientName').value;
+    const age = document.getElementById('patientAge').value;
+    const gender = document.getElementById('patientGender').value;
+    const disease = document.getElementById('patientDisease').value;
+
+    if (!name || !age || !gender || !disease) {
+        alert("Please fill all fields");
+        return;
+    }
+
+    fetch("HospitalManagement", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `action=addPatient&name=${encodeURIComponent(name)}&age=${age}&gender=${gender}&disease=${encodeURIComponent(disease)}`
+    })
+    .then(response => response.text())
+    .then(data => {
+        alert(data);
+        clearPatientFields();
+        loadViewData();
+    });
+}
+
+function clearPatientFields() {
+    document.getElementById('patientName').value = '';
+    document.getElementById('patientAge').value = '';
+    document.getElementById('patientGender').selectedIndex = 0;
+    document.getElementById('patientDisease').selectedIndex = 0;
+}
+
+// ---------------- Add Doctor ----------------
+function addDoctor() {
+    const name = document.getElementById('doctorName').value;
+    const age = document.getElementById('doctorAge').value;
+    const gender = document.getElementById('doctorGender').value;
+    const specialty = document.getElementById('doctorSpecialty').value;
+
+    if (!name || !age || !gender || !specialty) {
+        alert("Please fill all fields");
+        return;
+    }
+
+    fetch("HospitalManagement", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `action=addDoctor&name=${encodeURIComponent(name)}&age=${age}&gender=${gender}&specialty=${encodeURIComponent(specialty)}`
+    })
+    .then(response => response.text())
+    .then(data => {
+        alert(data);
+        clearDoctorFields();
+        loadViewData();
+    });
+}
+
+function clearDoctorFields() {
+    document.getElementById('doctorName').value = '';
+    document.getElementById('doctorAge').value = '';
+    document.getElementById('doctorGender').selectedIndex = 0;
+    document.getElementById('doctorSpecialty').value = '';
+}
+
+// ---------------- Load Data ----------------
+function loadViewData() {
+    fetch("HospitalManagement?action=view")
+    .then(response => response.json())
+    .then(data => {
+        const patientTable = document.querySelector("#patientTable tbody");
+        const doctorTable = document.querySelector("#doctorTable tbody");
+
+        patientTable.innerHTML = "";
+        data.patients.forEach(p => {
+            const row = document.createElement("tr");
+            row.innerHTML = `<td>${p.name}</td><td>${p.age}</td><td>${p.gender}</td><td>${p.disease}</td>`;
+            patientTable.appendChild(row);
+        });
+
+        doctorTable.innerHTML = "";
+        data.doctors.forEach(d => {
+            const row = document.createElement("tr");
+            row.innerHTML = `<td>${d.name}</td><td>${d.age}</td><td>${d.gender}</td><td>${d.specialty}</td>`;
+            doctorTable.appendChild(row);
+        });
+    });
+}
+</script>
+
+</body>
+</html>
