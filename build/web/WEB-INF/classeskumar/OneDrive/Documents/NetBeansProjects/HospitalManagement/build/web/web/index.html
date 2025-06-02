@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🏥 Hospital Management System</title>
+  <style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f0f8ff;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        text-align: center;
+        padding: 20px;
+        background-color: #4682b4;
+        color: white;
+    }
+
+    .tabs {
+        display: flex;
+        justify-content: center;
+        border-bottom: 2px solid #4682b4;
+    }
+
+    .tabs button {
+        background-color: #f0f8ff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .tabs button:hover,
+    .tabs button.active {
+        background-color: #4682b4;
+        color: white;
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    .form-container {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    input, select, button {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    button {
+        cursor: pointer;
+    }
+
+    .add-button {
+        background-color: #32cd32;
+        color: white;
+    }
+
+    .delete-button {
+        background-color: #ff6347;
+        color: white;
+    }
+
+    .clear-button {
+        background-color: #4682b4;
+        color: white;
+    }
+
+    table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: center;
+    }
+
+    th {
+        background-color: #4682b4;
+        color: white;
+    }
+
+    .section-title {
+        margin-top: 40px;
+        text-align: center;
+        font-size: 20px;
+        color: #4682b4;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+    <h1>🏥 Hospital Management System</h1>
+</header>
+
+<div class="container">
+    <div class="tabs">
+        <button onclick="openTab(event, 'home')">🏠 Home</button>
+        <button onclick="openTab(event, 'patient')">👨‍⚕ Patient</button>
+        <button onclick="openTab(event, 'doctor')">👩‍⚕ Doctor</button>
+        <button onclick="openTab(event, 'viewData')">📊 View Data</button>
+    </div>
+
+    <div id="home" class="tab-content">
+        <h2 class="section-title">Welcome to the Hospital Management System</h2>
+    </div>
+
+    <!-- Patient Tab -->
+    <div id="patient" class="tab-content">
+        <div class="form-container">
+            <h2>Add Patient</h2>
+            <input type="text" id="patientName" placeholder="Name">
+            <input type="number" id="patientAge" placeholder="Age">
+            <select id="patientGender">
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+            <select id="patientDisease">
+                <option value="">Select Disease</option>
+                <option value="Flu">Flu</option>
+                <option value="Covid">Covid</option>
+                <option value="Diabetes">Diabetes</option>
+            </select>
+            <button class="add-button" onclick="addPatient()">Add Patient</button>
+            <button class="clear-button" onclick="clearPatientFields()">Clear</button>
+        </div>
+
+        <div class="form-container">
+            <h2>Delete Patient</h2>
+            <input type="text" id="deletePatientName" placeholder="Enter Patient Name to Delete">
+            <button class="delete-button" onclick="deletePatientByName()">Delete Patient</button>
+        </div>
+    </div>
+
+    <!-- Doctor Tab -->
+    <div id="doctor" class="tab-content">
+        <div class="form-container">
+            <h2>Add Doctor</h2>
+            <input type="text" id="doctorName" placeholder="Name">
+            <input type="number" id="doctorAge" placeholder="Age">
+            <select id="doctorGender">
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+            <input type="text" id="doctorSpecialty" placeholder="Specialty">
+            <button class="add-button" onclick="addDoctor()">Add Doctor</button>
+            <button class="clear-button" onclick="clearDoctorFields()">Clear</button>
+        </div>
+
+        <div class="form-container">
+            <h2>Delete Doctor</h2>
+            <input type="text" id="deleteDoctorName" placeholder="Enter Doctor Name to Delete">
+            <button class="delete-button" onclick="deleteDoctorByName()">Delete Doctor</button>
+        </div>
+    </div>
+
+    <!-- View Data -->
+    <div id="viewData" class="tab-content">
+        <button onclick="loadViewData()">🔄 Refresh Data</button>
+        <h2 class="section-title">Patients</h2>
+        <table id="patientTable">
+            <thead>
+                <tr><th>Name</th><th>Age</th><th>Gender</th><th>Disease</th><th>Action</th></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <h2 class="section-title">Doctors</h2>
+        <table id="doctorTable">
+            <thead>
+                <tr><th>Name</th><th>Age</th><th>Gender</th><th>Specialty</th><th>Action</th></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+function openTab(evt, tabName) {
+    const tabs = document.querySelectorAll(".tab-content");
+    tabs.forEach(tab => tab.classList.remove("active"));
+    document.getElementById(tabName).classList.add("active");
+
+    const btns = document.querySelectorAll(".tabs button");
+    btns.forEach(btn => btn.classList.remove("active"));
+    evt.currentTarget.classList.add("active");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector(".tabs button").click(); // Default open tab
+});
+
+function addPatient() {
+    const name = document.getElementById("patientName").value;
+    const age = document.getElementById("patientAge").value;
+    const gender = document.getElementById("patientGender").value;
+    const disease = document.getElementById("patientDisease").value;
+
+    if (!name || !age || !gender || !disease) {
+        alert("Please fill all patient fields");
+        return;
+    }
+
+    fetch("HospitalManagement", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `action=addPatient&name=${encodeURIComponent(name)}&age=${age}&gender=${gender}&disease=${disease}`
+    }).then(res => res.text()).then(alert).then(loadViewData);
+}
+
+function clearPatientFields() {
+    document.getElementById("patientName").value = '';
+    document.getElementById("patientAge").value = '';
+    document.getElementById("patientGender").value = '';
+    document.getElementById("patientDisease").value = '';
+}
+
+function deletePatientByName() {
+    const name = document.getElementById("deletePatientName").value;
+    if (!name) return alert("Enter patient name to delete");
+
+    if (confirm(`Delete patient ${name}?`)) {
+        fetch("HospitalManagement", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `action=deletePatient&name=${encodeURIComponent(name)}`
+        }).then(res => res.text()).then(alert).then(loadViewData);
+    }
+}
+
+function addDoctor() {
+    const name = document.getElementById("doctorName").value;
+    const age = document.getElementById("doctorAge").value;
+    const gender = document.getElementById("doctorGender").value;
+    const specialty = document.getElementById("doctorSpecialty").value;
+
+    if (!name || !age || !gender || !specialty) {
+        alert("Please fill all doctor fields");
+        return;
+    }
+
+    fetch("HospitalManagement", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `action=addDoctor&name=${encodeURIComponent(name)}&age=${age}&gender=${gender}&specialty=${encodeURIComponent(specialty)}`
+    }).then(res => res.text()).then(alert).then(loadViewData);
+}
+
+function clearDoctorFields() {
+    document.getElementById("doctorName").value = '';
+    document.getElementById("doctorAge").value = '';
+    document.getElementById("doctorGender").value = '';
+    document.getElementById("doctorSpecialty").value = '';
+}
+
+function deleteDoctorByName() {
+    const name = document.getElementById("deleteDoctorName").value;
+    if (!name) return alert("Enter doctor name to delete");
+
+    if (confirm(`Delete doctor ${name}?`)) {
+        fetch("HospitalManagement", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `action=deleteDoctor&name=${encodeURIComponent(name)}`
+        }).then(res => res.text()).then(alert).then(loadViewData);
+    }
+}
+
+function loadViewData() {
+    fetch("HospitalManagement?action=view")
+    .then(res => res.json())
+    .then(data => {
+        const pt = document.querySelector("#patientTable tbody");
+        pt.innerHTML = "";
+        data.patients.forEach(p => {
+            pt.innerHTML += `<tr><td>${p.name}</td><td>${p.age}</td><td>${p.gender}</td><td>${p.disease}</td>
+            <td><button class="delete-button" onclick="deletePatientByName('${p.name}')">Delete</button></td></tr>`;
+        });
+
+        const dt = document.querySelector("#doctorTable tbody");
+        dt.innerHTML = "";
+        data.doctors.forEach(d => {
+            dt.innerHTML += `<tr><td>${d.name}</td><td>${d.age}</td><td>${d.gender}</td><td>${d.specialty}</td>
+            <td><button class="delete-button" onclick="deleteDoctorByName('${d.name}')">Delete</button></td></tr>`;
+        });
+    });
+}
+</script>
+
+</body>
+</html>
